@@ -91,6 +91,72 @@ sleep.sleep(1000)
 
 <h2>4. 従来マルチタスク機構との統合</h2>
 
+<p>Elixirの実行環境であるErlang VMでは，従来マルチタスク機構としてスレッド(軽量プロセス)を提供している。Erlang VMのスレッドそれぞれにGCを含むメモリ管理機構が独立して備わっている。そのため，スレッドの実行に不具合があった場合，スレッドを再起動しても他に影響がない。Elixirではこの特性を生かして高い耐障害性を実現している。</p>
+
+<p>SMP環境の場合の Erlang VM のスレッド構成を表1に示す[9]。</p>
+
+<p>表1: SMP環境での Erlang VM のスレッド構成</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">スレッド名</th>
+<th style="text-align: left">関数名</th>
+<th style="text-align: right">個数</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">Main Thread</td>
+<td style="text-align: left">erts_sys<em>main</em>thread</td>
+<td style="text-align: right">1</td>
+</tr>
+<tr>
+<td style="text-align: left">Signal Handling Thread</td>
+<td style="text-align: left">signal_dispatcher_thread_func</td>
+<td style="text-align: right">1</td>
+</tr>
+<tr>
+<td style="text-align: left">System Message Handling Thread</td>
+<td style="text-align: left">sys_msg_dispatcher_func</td>
+<td style="text-align: right">1</td>
+</tr>
+<tr>
+<td style="text-align: left">Async Thread</td>
+<td style="text-align: left">async_main</td>
+<td style="text-align: right">10</td>
+</tr>
+<tr>
+<td style="text-align: left">Child Waiting Thread</td>
+<td style="text-align: left">child_waiter</td>
+<td style="text-align: right">1</td>
+</tr>
+<tr>
+<td style="text-align: left">Scheduling Thread</td>
+<td style="text-align: left">sched_thread_func</td>
+<td style="text-align: right">論理コア数</td>
+</tr>
+<tr>
+<td style="text-align: left">Aux Thread</td>
+<td style="text-align: left">aux_thread</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+
+<p>それぞれの役割は次の通りである[9]:</p>
+
+<ul>
+<li>Main Thread: シグナルを受信して，Singal Handling Thread に通知する。</li>
+<li>Signal Handling Thread: シグナルハンドラ本体である。Main Threadが受信したシグナルに相当するハンドラを起動する。<code>erl</code>起動時の <code>&#39;+B&#39;</code> オプションでシグナル受信の挙動を変更できる。</li>
+<li>System Message Handling Thread: システムメッセージのハンドラである。システムメッセージは、トレース情報の出力やプロセスの再開・中断等をリクエストする特殊なメッセージである。詳細は文献[10]を参照のこと。</li>
+<li>Async Thread: Erlang プロセスによるファイル操作を非同期に行う。プロセスが file モジュールを通じてファイルの読み書きや開閉を行うと，Scheduling Threadに代わってAsync Threadがそれらの処理を請け負う。Async Thread はバイトコードを解釈実行するScheduling Thread の動作を止めないために，処理を肩代わりする。スレッドの起床は <code>futex()</code>システムコールで行う。Async Thread の個数は <code>erl</code> 起動時に <code>&#39;+A&#39;</code> オプションで変更できる。例えば、<code>&#39;erl +A 5&#39;</code> とすると、Async Thread は5個になる。</li>
+<li>Child Waiting Thread: 子スレッドの終了を <code>waitpid()</code>で待ち受ける。</li>
+<li>Scheduling Thread: <code>process_main()</code> を実行し、 バイトコード解釈実行とプロセススケジューリングを行う。デフォルトでは論理コアと同じ数だけ生成される。<code>&#39;+S&#39;</code> オプションでスレッド数を調整できる。他の Scheduling Thread と比較して負荷が偏らないようにバランシングとプロセスマイグレーションを行う。</li>
+<li>Aux Thread: 若干時間のかかる処理を受け持つ補助的なスレッドである。メモリアロケーションやGCの情報を取得する際等に，Scheduling Thread から処理をオフロードされる。例えば、<code>&#39;elrang:statistics(garbage_collection)&#39;</code> でのGC統計情報取得は，<code>aux_thread</code>で行う。</li>
+</ul>
+
+<p>他にNIF(Native Implemented Functions)や<code>driver</code>関係のスレッドを起動することがある。</p>
+
+<p>このように，システムの実行を司る Scheduling Thread と，I/Oを司る Async Thread が独立して存在することもElixirの特徴である。このため，マルチコア環境下でもI/Oに関して排他制御をする必要性がほとんど生じなくなる。これが高い並列処理性能に繋がる。</p>
+
 <h2>5. 軽量コールバックスレッドとメモリ管理の関係</h2>
 
 <p>Elixirの従来マルチタスク機構の特徴は，軽量プロセスごとにGCなどのメモリ管理が独立している点である。これにより，軽量プロセスに不具合が生じた時に再起動してメモリごと再初期化することが可能になる。</p>
@@ -137,5 +203,7 @@ sleep.sleep(1000)
 <li>[6] DockYard, Phoenix, available at <a href="http://phoenixframework.org">http://phoenixframework.org</a></li>
 <li>[7] Apache Software Foundation, Apache, available at <a href="http://www.apache.org">http://www.apache.org</a></li>
 <li>[8] Kamil Myśliwiec, Sleep-Async, available at <a href="https://www.npmjs.com/package/sleep-async">https://www.npmjs.com/package/sleep-async</a></li>
+<li>[9] Eiichi Tsukata, Erlang VM(BEAM) スレッド構成, available at <a href="http://blog.etsukata.com/2014/02/erlang-vmbeam.html">http://blog.etsukata.com/2014/02/erlang-vmbeam.html</a></li>
+<li>[10] Ericsson AB, manual of sys module, available at <a href="http://erlang.org/doc/man/sys.html">http://erlang.org/doc/man/sys.html</a></li>
 </ul>
 </body></html>
