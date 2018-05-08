@@ -171,7 +171,7 @@ sleep.sleep(1000)
 
 <ul>
 <li>Main Thread: シグナルを受信して，Singal Handling Thread に通知する。</li>
-<li>Signal Handling Thread: シグナルハンドラ本体である。Main Threadが受信したシグナルに相当するハンドラを起動する。<code>erl</code>起動時の <code>&#39;+B&#39;</code> オプションでシグナル受信の挙動を変更できる。</li>
+<li>Signal Handling Thread: シグナルハンドラ本体である。Main Threadが受信したシグナルに相当するハンドラを起動する。Erlangのコマンド <code>erl</code> 起動時の <code>&#39;+B&#39;</code> オプションでシグナル受信の挙動を変更できる。</li>
 <li>System Message Handling Thread: システムメッセージのハンドラである。システムメッセージは、トレース情報の出力やプロセスの再開・中断等をリクエストする特殊なメッセージである。詳細は文献[10]を参照のこと。</li>
 <li>Async Thread: Erlang プロセスによるファイル操作を非同期に行う。プロセスが file モジュールを通じてファイルの読み書きや開閉を行うと，Scheduling Threadに代わってAsync Threadがそれらの処理を請け負う。Async Thread はバイトコードを解釈実行するScheduling Thread の動作を止めないために，処理を肩代わりする。スレッドの起床は <code>futex()</code>システムコールで行う。Async Thread の個数は <code>erl</code> 起動時に <code>&#39;+A&#39;</code> オプションで変更できる。例えば、<code>&#39;erl +A 5&#39;</code> とすると、Async Thread は5個になる。</li>
 <li>Child Waiting Thread: 子スレッドの終了を <code>waitpid()</code>で待ち受ける。</li>
