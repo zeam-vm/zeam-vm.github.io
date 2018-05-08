@@ -100,7 +100,7 @@ sleep.sleep(1000)
 }
 </code></pre>
 
-<p>Zackernelの内部構成について説明する。Zackernel の<code>Schedule</code>クラスはコールバックする関数を保持し，<code>Schedule</code>同士を線形リスト構造でつないでいる。Zackernelの<code>Zackernel</code>クラスは<code>Schedule</code>のキューを保持する。核心となる<code>dispatch</code>メソッドは，次に呼び出すべき関数をキューから読み込んで呼び出す。スタックオーバーフローにならないように再帰呼び出しを抑制しながら次々とコールバックを呼び出すように設計・実装した。</p>
+<p>Zackernelの内部構成について説明する。Zackernel の<code>Schedule</code>クラスはコールバックする関数を保持し，<code>Schedule</code>同士を線形リスト構造でつないでいる。Zackernelの<code>Zackernel</code>クラスは<code>Schedule</code>のキューを保持する。核心となる<code>dispatch</code>メソッドは，次に呼び出すべき関数をキューから読み込んで呼び出す。<code>dispatch</code>に再入している時にはコールバックする関数を呼び出さない，そうでない場合のみコールバックする関数を呼び出すロジックにすることで，スタックオーバーフローにならないようにしている。</p>
 
 <h2>3. Elixirでの軽量コールバックスレッドの実装方針</h2>
 
