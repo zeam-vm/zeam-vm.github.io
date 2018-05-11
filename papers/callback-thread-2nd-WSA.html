@@ -172,18 +172,18 @@ sleep.sleep(1000)
 <ul>
 <li>Main Thread: シグナルを受信して，Singal Handling Thread に通知する。</li>
 <li>Signal Handling Thread: シグナルハンドラ本体である。Main Threadが受信したシグナルに相当するハンドラを起動する。Erlangのコマンド <code>erl</code> 起動時の <code>&#39;+B&#39;</code> オプションでシグナル受信の挙動を変更できる。</li>
-<li>System Message Handling Thread: システムメッセージのハンドラである。システムメッセージは、トレース情報の出力やプロセスの再開・中断等をリクエストする特殊なメッセージである。詳細は文献[10]を参照のこと。</li>
+<li>System Message Handling Thread: システムメッセージのハンドラである。システムメッセージは，トレース情報の出力やプロセスの再開・中断等をリクエストする特殊なメッセージである。詳細は文献[10]を参照のこと。</li>
 <li>Async Thread: Erlang プロセスによるファイル操作を非同期に行う。プロセスが file モジュールを通じてファイルの読み書きや開閉を行うと，Scheduling Threadに代わってAsync Threadがそれらの処理を請け負う。Async Thread はバイトコードを解釈実行するScheduling Thread の動作を止めないために，処理を肩代わりする。スレッドの起床は <code>futex()</code>システムコールで行う。Async Thread の個数は <code>erl</code> 起動時に <code>&#39;+A&#39;</code> オプションで変更できる。例えば、<code>&#39;erl +A 5&#39;</code> とすると、Async Thread は5個になる。</li>
 <li>Child Waiting Thread: 子スレッドの終了を <code>waitpid()</code>で待ち受ける。</li>
-<li>Scheduling Thread: <code>process_main()</code> を実行し、 バイトコード解釈実行とプロセススケジューリングを行う。デフォルトでは論理コアと同じ数だけ生成される。<code>&#39;+S&#39;</code> オプションでスレッド数を調整できる。他の Scheduling Thread と比較して負荷が偏らないようにバランシングとプロセスマイグレーションを行う。</li>
+<li>Scheduling Thread: <code>process_main()</code> を実行し，バイトコード解釈実行とプロセススケジューリングを行う。デフォルトでは論理コアと同じ数だけ生成される。<code>&#39;+S&#39;</code> オプションでスレッド数を調整できる。他の Scheduling Thread と比較して負荷が偏らないようにバランシングとプロセスマイグレーションを行う。</li>
 <li>Aux Thread: 若干時間のかかる処理を受け持つ補助的なスレッドである。メモリアロケーションやGCの情報を取得する際等に，Scheduling Thread から処理をオフロードされる。例えば、<code>&#39;elrang:statistics(garbage_collection)&#39;</code> でのGC統計情報取得は，<code>aux_thread</code>で行う。</li>
 </ul>
 
 <p>他にNIF(Native Implemented Functions)や<code>driver</code>関係のスレッドを起動することがある。</p>
 
-<p>このように，システムの実行を司る Scheduling Thread と，I/Oを司る Async Thread が独立して存在することもElixirの特徴である。このため，マルチコア環境下でもI/Oに関して排他制御をする必要性がほとんど生じなくなる。</p>
+<p>このように，システムの実行を司る Scheduling Thread と，I/Oを司る Async Thread が独立して存在することもElixirの特徴である。I/O処理をしたい時には Scheduling Thread からプロセス間通信で Async Thread に処理を委ね，1つのI/O処理は1つの Async Thread が独占的に行う。このため，マルチコア環境下でもI/Oに関して排他制御をする必要性がほとんど生じなくなる。</p>
 
-<p>これを踏まえて，軽量コールバックスレッドは従来の軽量スレッドをさらに細分するように実現する。軽量コールバックスレッドの実現に欠かせない非同期I/O処理は，Async Threadとの非同期通信で実現する。</p>
+<p>これを踏まえて，軽量コールバックスレッドは従来の軽量スレッドの Scheduling Thread をさらに細分するように実現する。軽量コールバックスレッドの実現に欠かせない非同期I/O処理は，Async Threadとの非同期通信で実現する。このことから，従来のプロセス間通信だけでなく，軽量コールバックスレッド同士の通信の仕組みが必要となる</p>
 
 <h2>5. 軽量コールバックスレッドとメモリ管理の関係</h2>
 
