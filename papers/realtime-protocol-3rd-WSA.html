@@ -153,6 +153,124 @@
 <li>親ピアの数(number of parent peers)???: 親ピアが子ピアを適切に選択することによってPLPは減少する。26</li>
 </ol>
 
+<p>また，Bhadra ら[1]が調べた論文それぞれが論じているPLPに影響を与えるパラメータとその効果は表1のとおりである。</p>
+
+<p>表1: PLPに影響を与えるパラメータとその効果についての論文</p>
+
+<table><thead>
+<tr>
+<th style="text-align: right">番号</th>
+<th style="text-align: right">参照番号</th>
+<th style="text-align: left">文献名</th>
+<th style="text-align: right">発行年</th>
+<th style="text-align: left">著者</th>
+<th style="text-align: left">ネットワークの種別</th>
+<th style="text-align: left">パラメータ</th>
+<th style="text-align: left">PLPへの影響</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: right">1</td>
+<td style="text-align: right">5</td>
+<td style="text-align: left">Packet loss probability for real time communication</td>
+<td style="text-align: right">2002</td>
+<td style="text-align: left">Kelvin et al.</td>
+<td style="text-align: left">無線</td>
+<td style="text-align: left">QoS, パケット到着間隔時刻(packet inter arrival time), パケット・ロス比(fraction of packet loss), パケット遅延(packet delay)</td>
+<td style="text-align: left">パケット遅延が増加するとPLPは減少する, PLPは遅延したパケットの到達とは独立している</td>
+</tr>
+<tr>
+<td style="text-align: right">2</td>
+<td style="text-align: right">6</td>
+<td style="text-align: left">Analysis of time delay of packet on multi-service system in loop LAN</td>
+<td style="text-align: right">2009</td>
+<td style="text-align: left">Cai Qun et al.</td>
+<td style="text-align: left">LAN</td>
+<td style="text-align: left">パケット平均到達レート(the mean arriving rate of the packets), 平均提供時間(the mean serving time), 平均時間遅延(the mean time delay)</td>
+<td style="text-align: left">時間遅延はパケット・ロスを増加させる</td>
+</tr>
+<tr>
+<td style="text-align: right">3</td>
+<td style="text-align: right">7</td>
+<td style="text-align: left">Relationship between packet loss probability and burst parameters for two types of traffic</td>
+<td style="text-align: right">2012</td>
+<td style="text-align: left">S. Matsuoka et al.</td>
+<td style="text-align: left">無線</td>
+<td style="text-align: left">有音期間(talk spurt), 無音期間(silence period), packet arrival interal, キュー容量(queue capacity), 平均パケットサイズ(average packet size), リンクのバンド幅(bandwidth of the link)</td>
+<td style="text-align: left">ルーターの負荷が増加するとPLPは増加する</td>
+</tr>
+<tr>
+<td style="text-align: right">4</td>
+<td style="text-align: right">8</td>
+<td style="text-align: left">Packet loss probability estimation with a Kalman filter approach</td>
+<td style="text-align: right">2006</td>
+<td style="text-align: left">Dongli Zhang and Dan Ionescu</td>
+<td style="text-align: left">MPLS VPN</td>
+<td style="text-align: left">バッファサイズ, パケットサイズ, バンド幅, ピークレート(peak rate)</td>
+<td style="text-align: left">バッファサイズが増加するとPLPは減少する</td>
+</tr>
+<tr>
+<td style="text-align: right">5</td>
+<td style="text-align: right">9</td>
+<td style="text-align: left">Loss behavior of an Internet router with self-similar input trafiic via Fractal point process</td>
+<td style="text-align: right">2013</td>
+<td style="text-align: left">Rajaiah Dasari and Malla Reddy perati</td>
+<td style="text-align: left">無線</td>
+<td style="text-align: left">Hurst parameter, Fractal onset time, time scale</td>
+<td style="text-align: left">Hurst パラメータが増加するとPLPは増加する。フラクタル開始時間(Fractal onset time)???はPLPを減少させる。タイムスケール(time scale)???はPLPを減少させる</td>
+</tr>
+<tr>
+<td style="text-align: right">6</td>
+<td style="text-align: right">10</td>
+<td style="text-align: left">Online packet loss measurement and estimation for VPN based services</td>
+<td style="text-align: right">2010</td>
+<td style="text-align: left">Dongli Zhang adn Dang lonescu</td>
+<td style="text-align: left">VPN</td>
+<td style="text-align: left">Packet loss, bandwidth</td>
+<td style="text-align: left">バッファサイズが増加するとPLPが減少する</td>
+</tr>
+<tr>
+<td style="text-align: right">7</td>
+<td style="text-align: right">11</td>
+<td style="text-align: left">Fuild flow model for SCTP traffic over the Internet</td>
+<td style="text-align: right">2012</td>
+<td style="text-align: left">Perr Azmatshah and Amir Qayyum</td>
+<td style="text-align: left">無線</td>
+<td style="text-align: left">到達レート(arrival rate), 生産性(productivity), depature rate, キュー長, 時間スループット(time throuput)</td>
+<td style="text-align: left">スループットによってPLPは増加する</td>
+</tr>
+<tr>
+<td style="text-align: right">8</td>
+<td style="text-align: right">12</td>
+<td style="text-align: left">A system of systems approach: a benchmark to WSNs mobility models</td>
+<td style="text-align: right">2010</td>
+<td style="text-align: left">Sh. Al-Shukri et al.</td>
+<td style="text-align: left">WSN</td>
+<td style="text-align: left">PLP, スループット, ノードの最適バッファサイズ(optimal buffuer size of nodes), エンドツーエンドの遅延 (end-to-end delay), link and path availability</td>
+<td style="text-align: left">スループットが増加するにつれてPLPは減少する</td>
+</tr>
+<tr>
+<td style="text-align: right">9</td>
+<td style="text-align: right">13</td>
+<td style="text-align: left">Evaluation of PLP in Bluetooth networks</td>
+<td style="text-align: right">2002</td>
+<td style="text-align: left">Franco Mazzenga and Dajana Cassioli</td>
+<td style="text-align: left">MANET</td>
+<td style="text-align: left">reference receiver, receive power, interference power, thermal noise power</td>
+<td style="text-align: left">リファレンス・レシーバが中央にあるとPLPが増加し，隅にあるとPLPは減少する。</td>
+</tr>
+<tr>
+<td style="text-align: right">10</td>
+<td style="text-align: right">14</td>
+<td style="text-align: left">PLP for bursty wireless real time traffic through delay model</td>
+<td style="text-align: right">2004</td>
+<td style="text-align: left">Kelvin K. Lee and Samuel T. Chason</td>
+<td style="text-align: left">無線</td>
+<td style="text-align: left">バンド幅, マージン</td>
+<td style="text-align: left">LPの値はマージンの値に依存する。マージンが増加したときにPLPはわずかに変化する。</td>
+</tr>
+</tbody></table>
+
 <h2>まとめと将来課題</h2>
 
 <h2>謝辞</h2>
