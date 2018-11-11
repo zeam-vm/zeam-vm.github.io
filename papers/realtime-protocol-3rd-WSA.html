@@ -1,9 +1,9 @@
-<!DOCTYPE html><html><head><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" /><title>HTTPでリアルタイム性を保証するために解決すべき技術的課題</title><link href="//fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet" type="text/css" /><link href="/stylesheets/site-974c506ab4.css" rel="stylesheet" /><script src="/javascripts/all-135d51686c.js"></script></head><body class="papers papers_realtime-protocol-3rd-WSA"><h1>HTTPでリアルタイム性を保証するために解決すべき技術的課題</h1>
+<!DOCTYPE html><html><head><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><meta charset="utf-8" /><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" /><title>HTTP/TCP/IP通信におけるリアルタイム性を阻害する要因</title><link href="//fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet" type="text/css" /><link href="/stylesheets/site-974c506ab4.css" rel="stylesheet" /><script src="/javascripts/all-135d51686c.js"></script></head><body class="papers papers_realtime-protocol-3rd-WSA"><h1>HTTP/TCP/IP通信におけるリアルタイム性を阻害する要因</h1>
 
-<h2>北九州市立大学 大迫 貴(*1)，山崎 進(*2)，中武 繁寿(*2)，藤本 悠介(*2)，永原 正章(*3)</h2>
+<h2>北九州市立大学 山崎 進(*1)，大迫 貴(*2)，中武 繁寿(*1)，藤本 悠介(*1)，永原 正章(*3)</h2>
 
-<p>*1 北九州市立大学 国際環境工学部 情報メディア工学科<br>
-*2 北九州市立大学 国際環境工学部<br>
+<p>*1 北九州市立大学 国際環境工学部<br>
+*2 北九州市立大学 国際環境工学部 情報メディア工学科<br>
 *3 北九州市立大学 環境技術研究所  　</p>
 
 <h2>1. はじめに</h2>
@@ -12,9 +12,17 @@
 
 <p>本発表の目的は，リモートでネットワーク越しに機器制御を行うケースで，HTTP通信でもある程度リアルタイム性を担保したいと考えたときに，どのような技術的課題が存在するかをサーベイすることである。本発表を叩き台として議論したい。</p>
 
-<p>本発表のこの後の構成は次のとおりである: </p>
+<h2>2. リアルタイム性を阻害する3大要因</h2>
 
-<h2>2. プロトコルスタックの各階層におけるリアルタイム性を阻害する要因</h2>
+<p>ネットワーク通信のリアルタイム性を阻害する要因は基本的に次の3つだと認識している。</p>
+
+<ol>
+<li>パケットロスによる再送</li>
+<li>ビット誤りによる再送</li>
+<li>中継の遅延</li>
+</ol>
+
+<h2>3. プロトコルスタックの各階層</h2>
 
 <p>OSI参照モデルとHTTP/TCP/IPを中心とした各プロトコルの対応関係を図1[1]に示す。</p>
 
@@ -60,222 +68,86 @@
 
 <p>図1 OSI参照モデルと各プロトコルの対応関係</p>
 
-<p>以下，各階層について，リアルタイム性を損ねる要因を列挙する。ただし，これら以外にもOSやミドルウェアのリアルタイム性の不足・欠如によってもリアルタイム性を損ねてしまう。</p>
+<p>以下，各階層について，リアルタイム性を損ねる要因を列挙する。</p>
 
-<h3>2.1 物理層</h3>
+<h3>3.1 物理層</h3>
 
 <p>物理層におけるリアルタイム性を損ねる要因は，次の通りだと認識している。</p>
 
 <ul>
-<li>信号の減衰・衝突・反射</li>
-<li>障害物の非透過性</li>
-<li>ノイズ</li>
-<li>無線妨害</li>
+<li>信号の減衰・衝突・反射(パケットロス，ビット誤りが生じる)</li>
+<li>障害物の非透過性(パケットロス，ビット誤りが生じる)</li>
+<li>ノイズ(パケットロス，ビット誤りが生じる)</li>
+<li>無線妨害(パケットロス，ビット誤りが生じる)</li>
 </ul>
 
-<h3>2.2 データリンク層</h3>
+<h3>3.2 データリンク層</h3>
 
 <p>データリンク層におけるリアルタイム性を損ねる要因は，次の通りだと認識している。</p>
 
 <ul>
-<li>フレームの消失・衝突</li>
-<li>フレーム飽和攻撃による通信妨害</li>
+<li>フレームの消失・衝突(パケットロスが生じる)</li>
+<li>フレーム飽和攻撃による通信妨害(パケットロスが生じる)</li>
 </ul>
 
-<h3>2.3 ネットワーク層</h3>
+<h3>3.3 ネットワーク層</h3>
 
 <p>ネットワーク層におけるリアルタイム性を損ねる要因は，次の通りだと認識している。</p>
 
 <ul>
-<li>パケットの消失・衝突</li>
-<li>伝送経路の不定性による伝送時間の変動</li>
-<li>通信量の変動による伝送時間の変動</li>
-<li>通信経路のフォールトトレランス性の欠如</li>
-<li>誤った経路情報が与えられることによる混乱</li>
+<li>パケットの消失・衝突(パケットロスが生じる)</li>
+<li>伝送経路の不定性による伝送時間の変動(中継の遅延が生じる)</li>
+<li>通信量の変動による伝送時間の変動(パケットロス，中継の遅延が生じる)</li>
+<li>通信経路のフォールトトレランス性の欠如(パケットロス，中継の遅延が生じる)</li>
+<li>誤った経路情報が与えられることによる混乱(中継の遅延が生じる)</li>
 </ul>
 
-<h3>2.4 トランスポート層</h3>
+<h3>3.4 トランスポート層</h3>
 
 <p>トランスポート層におけるリアルタイム性を損ねる要因は，次の通りだと認識している。</p>
 
 <ul>
-<li>コネクションの確立・維持にかかるコスト</li>
-<li>セグメントの輻輳によるパケット破棄</li>
-<li>ネットワーク層以下のパケット到着順不定性によって起こるパケット順を揃えるための待ち時間</li>
-<li>DDoS攻撃による妨害</li>
+<li>コネクションの確立・維持にかかるコスト(パケットロス，中継の遅延が生じる)</li>
+<li>セグメントの輻輳によるパケット破棄(パケットロスが生じる)</li>
+<li>ネットワーク層以下のパケット到着順不定性によって起こるパケット順を揃えるための待ち時間(中継の遅延が生じる)</li>
+<li>DDoS攻撃による妨害(パケットロス，中継の遅延が生じる)</li>
 </ul>
 
-<h3>2.5 アプリケーション層</h3>
+<h3>3.5 アプリケーション層</h3>
 
 <p>アプリケーション層におけるリアルタイム性を損ねる要因は，次の通りだと認識している。</p>
 
 <ul>
-<li>セッションの確立・維持にかかるコスト</li>
-<li>同期処理による遅延</li>
-<li>DDoS攻撃による妨害</li>
+<li>セッションの確立・維持にかかるコスト(パケットロス，中継の遅延が生じる)</li>
+<li>同期処理による遅延(中継の遅延が生じる)</li>
+<li>DDoS攻撃による妨害(パケットロス，中継の遅延が生じる)</li>
 </ul>
 
-<h2>3. パケット・ロス</h2>
+<h2>3. ルーター/PC等による遅延</h2>
 
-<p>これらの要因の多くはパケット・ロス(packet loss)に起因すると考えた。Bhadra ら[2]によるとパケット・ロスの主な原因は次のとおりである。</p>
+<p>他にはルーター/PC等による通信・中継でも遅延は生じる。これらに搭載されているOSやミドルウェアのリアルタイム性の不足・欠如によってもリアルタイム性を損ねてしまう。これによってパケットロスや中継の遅延が生じる。</p>
 
-<ul>
-<li>自然に起こる受信障害もしくは人為的な妨害(natural or human-made interference)
+<h2>4. パケットロスについて</h2>
 
-<ul>
-<li>パケット・ドロップ(packet dropping): ルーターがパケットを受け取ったにも関わらず，ルーターが過負荷である，もしくはルーターが DoS 攻撃を受けていると認識したなどの理由で，次のホップ先にパケットを送らないと決めた場合に起こる
+<p>パケットロスについて解析している研究は，大別して次の3つのアプローチのいずれかまたは複数を用いている。</p>
 
 <ul>
-<li>ネットワーク輻輳(network congestion)</li>
-</ul></li>
-</ul></li>
-<li>システムノイズ(system noise)</li>
-<li>ハードウェア障害(hardware fault)</li>
-<li>ソフトウェア欠陥・障害によるデータ破損(software corruption)</li>
+<li>ネットワーク環境を再現してのシミュレーション</li>
+<li>実環境での実験・測定</li>
+<li>数理モデル</li>
 </ul>
 
-<p>Bhadra ら[2]はサーベイの結果，パケット・ロス確率(PLP)に影響を与えるパラメータの効果を次のようにまとめた。</p>
+<p>今回の目的では，数理モデルを求めたいと考えている。</p>
 
-<ol>
-<li>遅延(delay): 遅延が増加するとPLPは減少する。ただし，PLPは遅延したパケットの到着とは独立であるものとする。5,6</li>
-<li>ルーター負荷(router load): ルーター負荷が増加するとPLPは増加する。7</li>
-<li>パケット長(packet length): サブスクライバ(subscriber)???が増加するとPLPが増加するのに対し，パケット長が増加するとPLPは減少する。8</li>
-<li>Hurst パラメータ(Hurst parameter)???: Hurst パラメータが増加するとPLPが増加する。フラクタル開始時間(Fractal onset time)???はPLPを減少させる。タイムスケール(time scale)???はPLPを減少させる。9</li>
-<li>バッファ・サイズ(buffer size): バッファサイズの増加によってPLPは減少する。10</li>
-<li>スループット(throughput): スループットによってPLPは増加する。11,12</li>
-<li>リファレンス・レシーバ(reference receiver)???: リファレンス・レシーバが中央にあるとPLPが増加し，隅にあるとPLPは減少する。13</li>
-<li>マージン(margin): PLPの値はマージンの値に依存する。マージンが増加したときにPLPはわずかに変化する。14</li>
-<li>トラフィック負荷(traffic load): トラフィック負荷が増加するとPLPは増加する。15</li>
-<li>冗長性(redundancy): 冗長性を加えることでメッセージのパケット・ロスが減少する。18</li>
-<li>遅延ジッタ(delay jitter): 同時に他のノードが通信していないときにパケットが通信されて成功するときにPLPは減少する。19</li>
-<li>電波領域(radio range): 20</li>
-<li>チャネル・パケット・ドロップ率(channel packet drop rate): チャネル・パケット・ドロップ率が増加するとPLPは増加する。21</li>
-<li>フィールド・サイズ(field size): フィールド・サイズが増加するとPLPは減少する。22</li>
-<li>閾値(threshold): 出力波長の欠如によってPLPは増加する??? 19,23</li>
-<li>出力限界(power limit): 受信出力限界が増加するとPLPは減少する。24</li>
-<li>波長(wave length): 波長変換器の回数が増加するとPLPは減少する??? 25</li>
-<li>親ピアの数(number of parent peers)???: 親ピアが子ピアを適切に選択することによってPLPは減少する。26</li>
-</ol>
+<p>Bhadraらのサーベイ[2]が，合計24編のパケットロスに関して詳細に解析した有用な文献をまとめて，パケットロスに影響を与えるパラメータを列挙している。</p>
 
-<p>また，Bhadra ら[2]が調べた論文それぞれが論じているPLPに影響を与えるパラメータとその効果は表1のとおりである。</p>
+<p>Bhadraらのサーベイはとても有用ではあるが，複数のプロトコルスタックの階層にわたって言える結論と，特定のプロトコルに特化した結論を，同列に扱っているため，今回の目的に即した数理モデルを策定するのには情報が欠如している。そこで，Bhadraらのサーベイを元にして，プロトコルスタックの階層や各プロトコルごとに整理しなおして，数理モデルを策定する必要がある。</p>
 
-<p>表1: PLPに影響を与えるパラメータとその効果についての論文</p>
+<p>また，最終的にはリアルタイム性に与える影響を分析したいことから，パケットロスと遅延の関係性についても数理モデルを策定したい。</p>
 
-<table><thead>
-<tr>
-<th style="text-align: right">番号</th>
-<th style="text-align: right">参照番号</th>
-<th style="text-align: left">文献名</th>
-<th style="text-align: right">発行年</th>
-<th style="text-align: left">著者</th>
-<th style="text-align: left">ネットワークの種別</th>
-<th style="text-align: left">パラメータ</th>
-<th style="text-align: left">PLPへの影響</th>
-</tr>
-</thead><tbody>
-<tr>
-<td style="text-align: right">1</td>
-<td style="text-align: right">5</td>
-<td style="text-align: left">Packet loss probability for real time communication</td>
-<td style="text-align: right">2002</td>
-<td style="text-align: left">Kelvin et al.</td>
-<td style="text-align: left">無線</td>
-<td style="text-align: left">QoS, パケット到着間隔時刻(packet inter arrival time), パケット・ロス比(fraction of packet loss), パケット遅延(packet delay)</td>
-<td style="text-align: left">パケット遅延が増加するとPLPは減少する, PLPは遅延したパケットの到達とは独立している</td>
-</tr>
-<tr>
-<td style="text-align: right">2</td>
-<td style="text-align: right">6</td>
-<td style="text-align: left">Analysis of time delay of packet on multi-service system in loop LAN</td>
-<td style="text-align: right">2009</td>
-<td style="text-align: left">Cai Qun et al.</td>
-<td style="text-align: left">LAN</td>
-<td style="text-align: left">パケット平均到達レート(the mean arriving rate of the packets), 平均提供時間(the mean serving time), 平均時間遅延(the mean time delay)</td>
-<td style="text-align: left">時間遅延はパケット・ロスを増加させる</td>
-</tr>
-<tr>
-<td style="text-align: right">3</td>
-<td style="text-align: right">7</td>
-<td style="text-align: left">Relationship between packet loss probability and burst parameters for two types of traffic</td>
-<td style="text-align: right">2012</td>
-<td style="text-align: left">S. Matsuoka et al.</td>
-<td style="text-align: left">無線</td>
-<td style="text-align: left">有音期間(talk spurt), 無音期間(silence period), packet arrival interal, キュー容量(queue capacity), 平均パケットサイズ(average packet size), リンクのバンド幅(bandwidth of the link)</td>
-<td style="text-align: left">ルーターの負荷が増加するとPLPは増加する</td>
-</tr>
-<tr>
-<td style="text-align: right">4</td>
-<td style="text-align: right">8</td>
-<td style="text-align: left">Packet loss probability estimation with a Kalman filter approach</td>
-<td style="text-align: right">2006</td>
-<td style="text-align: left">Dongli Zhang and Dan Ionescu</td>
-<td style="text-align: left">MPLS VPN</td>
-<td style="text-align: left">バッファサイズ, パケットサイズ, バンド幅, ピークレート(peak rate)</td>
-<td style="text-align: left">バッファサイズが増加するとPLPは減少する</td>
-</tr>
-<tr>
-<td style="text-align: right">5</td>
-<td style="text-align: right">9</td>
-<td style="text-align: left">Loss behavior of an Internet router with self-similar input trafiic via Fractal point process</td>
-<td style="text-align: right">2013</td>
-<td style="text-align: left">Rajaiah Dasari and Malla Reddy perati</td>
-<td style="text-align: left">無線</td>
-<td style="text-align: left">Hurst parameter, Fractal onset time, time scale</td>
-<td style="text-align: left">Hurst パラメータが増加するとPLPは増加する。フラクタル開始時間(Fractal onset time)???はPLPを減少させる。タイムスケール(time scale)???はPLPを減少させる</td>
-</tr>
-<tr>
-<td style="text-align: right">6</td>
-<td style="text-align: right">10</td>
-<td style="text-align: left">Online packet loss measurement and estimation for VPN based services</td>
-<td style="text-align: right">2010</td>
-<td style="text-align: left">Dongli Zhang adn Dang lonescu</td>
-<td style="text-align: left">VPN</td>
-<td style="text-align: left">Packet loss, bandwidth</td>
-<td style="text-align: left">バッファサイズが増加するとPLPが減少する</td>
-</tr>
-<tr>
-<td style="text-align: right">7</td>
-<td style="text-align: right">11</td>
-<td style="text-align: left">Fuild flow model for SCTP traffic over the Internet</td>
-<td style="text-align: right">2012</td>
-<td style="text-align: left">Perr Azmatshah and Amir Qayyum</td>
-<td style="text-align: left">無線</td>
-<td style="text-align: left">到達レート(arrival rate), 生産性(productivity), depature rate, キュー長, 時間スループット(time throuput)</td>
-<td style="text-align: left">スループットによってPLPは増加する</td>
-</tr>
-<tr>
-<td style="text-align: right">8</td>
-<td style="text-align: right">12</td>
-<td style="text-align: left">A system of systems approach: a benchmark to WSNs mobility models</td>
-<td style="text-align: right">2010</td>
-<td style="text-align: left">Sh. Al-Shukri et al.</td>
-<td style="text-align: left">WSN</td>
-<td style="text-align: left">PLP, スループット, ノードの最適バッファサイズ(optimal buffuer size of nodes), エンドツーエンドの遅延 (end-to-end delay), link and path availability</td>
-<td style="text-align: left">スループットが増加するにつれてPLPは減少する</td>
-</tr>
-<tr>
-<td style="text-align: right">9</td>
-<td style="text-align: right">13</td>
-<td style="text-align: left">Evaluation of PLP in Bluetooth networks</td>
-<td style="text-align: right">2002</td>
-<td style="text-align: left">Franco Mazzenga and Dajana Cassioli</td>
-<td style="text-align: left">MANET</td>
-<td style="text-align: left">reference receiver, receive power, interference power, thermal noise power</td>
-<td style="text-align: left">リファレンス・レシーバが中央にあるとPLPが増加し，隅にあるとPLPは減少する。</td>
-</tr>
-<tr>
-<td style="text-align: right">10</td>
-<td style="text-align: right">14</td>
-<td style="text-align: left">PLP for bursty wireless real time traffic through delay model</td>
-<td style="text-align: right">2004</td>
-<td style="text-align: left">Kelvin K. Lee and Samuel T. Chason</td>
-<td style="text-align: left">無線</td>
-<td style="text-align: left">バンド幅, マージン</td>
-<td style="text-align: left">PLPの値はマージンの値に依存する。マージンが増加したときにPLPはわずかに変化する。</td>
-</tr>
-</tbody></table>
+<h2>5. ビット誤りと中継の遅延について</h2>
 
-<h2>まとめと将来課題</h2>
+<p>ビット誤りと中継の遅延については，まだ有力なサーベイ論文を見出していない。もし存在しないようであれば，体系的なサーベイを敢行する必要がある。</p>
 
 <h2>謝辞</h2>
 
