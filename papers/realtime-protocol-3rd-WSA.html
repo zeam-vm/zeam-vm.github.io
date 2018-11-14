@@ -149,6 +149,12 @@
 
 <p>ビット誤りと中継の遅延については，まだ有力なサーベイ論文を見出していない。もし存在しないようであれば，体系的なサーベイを敢行する必要がある。</p>
 
+<h2>6. 今度の方向性</h2>
+
+<p>我々は今後，制御理論に基づいて，ネットワーク経路等を制御・最適化する研究を推し進めようと考えている。方向性としては，Hespanhaらのサーベイ研究[3]が近い。実際の遅延の各要因について設定した数理モデルを制約条件として，制御モデルを構築することを考えている。</p>
+
+<p>また，制御理論の観点では，パケットロスよりも遅延の方がよりクリティカルである。パケットロスしてしまった時に，パケットを再送するよりも，パケットがロスした事実を通知して，前後関係から推論・近似復元するというアプローチを取った方が良いかもしれない。そうするとTCPを前提とせずにプロトコルスタックを構築した方が良い可能性もある。我々は今後，この点についても考察を深める。</p>
+
 <h2>謝辞</h2>
 
 <p>本研究の一部は，JST未来社会創造事業 JPMJMI17B4 の支援を受けた。</p>
@@ -160,5 +166,6 @@
 <ul>
 <li>[1] 竹下隆史, 松山公保, 荒井透, 苅田幸雄, &quot;マスタリングTCP/IP 入門編&quot;, 第5版, オーム社, 1994, URL: <a href="https://www.ohmsha.co.jp/book/9784274068768/">https://www.ohmsha.co.jp/book/9784274068768/</a></li>
 <li>[2] D. R. Bhadra, C. A. Joshi, P. R. Soni, N. P. Vyas and R. H. Jhaveri, &quot;Packet loss probability in wireless networks: A survey,&quot; 2015 International Conference on Communications and Signal Processing (ICCSP), Melmaruvathur, 2015, pp. 1348-1354, doi: 10.1109/ICCSP.2015.7322729, URL: <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7322729&amp;isnumber=7322423">http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7322729&amp;isnumber=7322423</a></li>
+<li>[3] J. P. Hespanha, P. Naghshtabrizi and Y. Xu, &quot;A Survey of Recent Results in Networked Control Systems,&quot; in Proceedings of the IEEE, vol. 95, no. 1, pp. 138-162, Jan. 2007, doi: 10.1109/JPROC.2006.887288, URL: <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4118465&isnumber=4118453">http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=4118465&amp;isnumber=4118453</a></li>
 </ul>
 </body></html>
